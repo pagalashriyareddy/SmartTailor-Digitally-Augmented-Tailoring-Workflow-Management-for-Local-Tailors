@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TailorEase - Micro ERP</title>
+  <style>
+    :root {
+      --primary-color: #2E8B57;
+      --accent-color: #4CAF50;
+      --hover-color: #3e8e41;
+      --bg-light: #f9f9f9;
+      --text-color: #333;
+      --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-color);
+    }
+
+    header {
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--card-shadow);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background-color: #222;
+      padding: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: var(--hover-color);
+    }
+
+    .container {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .form-section {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    h2 {
+      border-left: 6px solid var(--accent-color);
+      padding-left: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background-color: var(--accent-color);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--hover-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    .annotation-img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+
+    .popup {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--card-shadow);
+      z-index: 9999;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TailorEase - Micro ERP</h1>
+  </header>
+  <nav>
+    <a href="#new-order">New Order</a>
+    <a href="#measurements">Measurements</a>
+    <a href="#track-order">Track Order</a>
+    <a href="#inventory">Inventory</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#past-orders">Past Orders</a>
+  </nav>
+
+  <div class="container">
+    <div id="popup" class="popup">Order submitted successfully!</div>
+
+    <section id="new-order" class="form-section">
+      <h2>New Stitching Order</h2>
+      <label>Customer Name</label>
+      <input type="text" id="customerName" placeholder="e.g., Anjali Patel">
+
+      <label>Style</label>
+      <input type="text" id="style" placeholder="e.g., Kurti, Blouse, Shirt">
+
+      <label>Fabric Type</label>
+      <select id="fabric">
+        <option>Cotton</option>
+        <option>Silk</option>
+        <option>Linen</option>
+        <option>Rayon</option>
+      </select>
+
+      <label>Special Instructions</label>
+      <textarea rows="3" id="instructions" placeholder="Mention embroidery, patterns, fitting notes..."></textarea>
+
+      <button onclick="submitOrder()">Submit Order</button>
+    </section>
+
+    <section id="measurements" class="form-section">
+      <h2>Customer Measurements</h2>
+      <label>Shoulder (inches)</label>
+      <input type="number" id="shoulder" step="0.1">
+
+      <label>Chest (inches)</label>
+      <input type="number" id="chest" step="0.1">
+
+      <label>Waist (inches)</label>
+      <input type="number" id="waist" step="0.1">
+
+      <label>Hips (inches)</label>
+      <input type="number" id="hips" step="0.1">
+
+      <label>Height (inches)</label>
+      <input type="number" id="height" step="0.1">
+
+      <button onclick="saveMeasurements()">Save Measurements</button>
+    </section>
+
+    <section id="track-order" class="form-section">
+      <h2>Order Status</h2>
+      <h3>All Customer Orders Status</h3>
+      <ul id="customerOrdersStatus">
+        <li>Shirt (Cotton) - Cutting</li>
+        <li>Blouse (Silk) - Trial Ready</li>
+        <li>Salwar (Linen) - Out for Delivery</li>
+      </ul>
+    </section>
+
+    <section id="inventory" class="form-section">
+      <h2>Inventory</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Fabric</th>
+            <th>Stock (meters)</th>
+            <th>Last Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Cotton</td><td>45</td><td>June 10, 2025</td></tr>
+          <tr><td>Silk</td><td>20</td><td>June 09, 2025</td></tr>
+          <tr><td>Linen</td><td>32</td><td>June 08, 2025</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="dashboard" class="form-section">
+      <h2>Dashboard - Incoming Orders</h2>
+      <table id="dashboardTable">
+        <thead>
+          <tr>
+            <th>Style</th>
+            <th>Fabric</th>
+            <th>Shoulder</th>
+            <th>Waist</th>
+            <th>Chest</th>
+            <th>Due Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Incoming orders will be inserted here -->
+        </tbody>
+      </table>
+    </section>
+
+    <section id="past-orders" class="form-section">
+      <h2>Past Orders</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Style</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>#1021</td><td>Neha</td><td>Kurti</td><td>Jun 1</td><td>Delivered</td></tr>
+          <tr><td>#1022</td><td>Raj</td><td>Shirt</td><td>Jun 4</td><td>Delivered</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="ai-measurement" class="form-section">
+      <h2>AI Body Measurement Estimator</h2>
+      <p>Upload a full-body photo for AI-based measurement prediction (should be in proper posture and clothing).</p>
+      <input type="file" accept="image/*" id="bodyImageInput">
+      <button onclick="estimateMeasurements()">Estimate Measurements</button>
+      <div id="estimatedResults" style="margin-top: 1rem;"></div>
+    </section>
+  </div>
+
+  <script>
+    function showPopup(message) {
+      const popup = document.getElementById('popup');
+      popup.textContent = message;
+      popup.style.display = 'block';
+      setTimeout(() => popup.style.display = 'none', 3000);
+    }
+
+    function submitOrder() {
+      showPopup("Order submitted successfully!");
+    }
+
+    function saveMeasurements() {
+      showPopup("Measurements saved successfully!");
+    }
+
+    function estimateMeasurements() {
+      const imageInput = document.getElementById("bodyImageInput");
+      const resultDiv = document.getElementById("estimatedResults");
+      if (imageInput.files.length === 0) {
+        alert("Please upload a photo first.");
+        return;
+      }
+
+      const filename = imageInput.files[0].name;
+      resultDiv.innerHTML = `<p><strong>Estimated from ${filename}:</strong></p>
+        <ul>
+          <li><strong>Shoulder:</strong> 17 inches</li>
+          <li><strong>Waist:</strong> 30 inches</li>
+          <li><strong>Chest:</strong> 36 inches</li>
+        </ul>
+        <p><em>(Note: This is a mock result. Actual AI estimation requires backend model.)</em></p>`;
+    }
+  </script>
+</body>
+</html>
